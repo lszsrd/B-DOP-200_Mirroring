@@ -16,26 +16,26 @@ jobs:
         runs-on: ghcr.io/epitech/coding-style-checker:latest
         steps:
             - uses: actions/checkout@v3
-            - name: Running coding-style report
+            - name: Checking coding-style
               run: |
                 coding-style . .
                 if [ -z coding-style-reports.log ]; then
-                    exit(1)
+                    exit 1
                 fi
               shell: bash
     check_program_compilation:
         runs-on: epitechcontent/epitest-docker
         steps:
             - uses: actions/checkout@v3
-            - name: Running compilation tests
+            - name: Checking compilation
               run: |
                 make && make re && make clean && make re
                 if [ $? -ne 0 ]; then
-                  exit(1)
+                  exit 1
                 fi
               shell: bash
-    run_tests:
-        runs-on: epitechcontent/epitest-docker
+    #run_tests:
+    #    runs-on: epitechcontent/epitest-docker
     # Redirects to Epitech's repository.
     # TODO: It should use 'GIT_SSH_PRIVATE_KEY' secret to 'MIRROR_URL' env.
     #push_to_mirror:
