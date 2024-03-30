@@ -1,0 +1,35 @@
+# Personal repository: https://github.com/lszsrd/B-DOP-200_Mirroring
+# Destination repository: git@github.com:EpitechPromo2028/B-DOP-200-NCY-2-1-chocolatine-laszlo.serdet.git
+
+name: chocolatine
+run-name: Running ${{ github.action }} workflow - ${{ github.actor }}
+
+on:
+    push:
+    pull_request:
+      branches-ignore:
+        - 'ga-ignore-'
+    
+jobs:
+    # Checks for coding-style errors.
+    check_coding_style:
+        runs-on: ghcr.io/epitech/coding-style-checker:latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Running coding-style report
+              run:
+                coding-style . .
+              shell: bash
+    check_program_compilation:
+        runs-on: epitechcontent/epitest-docker
+        steps:
+            - uses: actions/checkout@v3
+            - name: Running compilation tests
+              run:
+                make && make re && make clean && make fclean
+              shell: bash
+    run_tests:
+        runs-on: epitechcontent/epitest-docker
+    # Redirects to Epitech's repository.
+    # TODO: It should use 'GIT_SSH_PRIVATE_KEY' secret to 'MIRROR_URL' env.
+    #push_to_mirror:
