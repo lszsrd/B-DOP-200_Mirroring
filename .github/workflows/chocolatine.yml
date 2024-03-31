@@ -2,40 +2,60 @@
 # Destination repository: git@github.com:EpitechPromo2028/B-DOP-200-NCY-2-1-chocolatine-laszlo.serdet.git
 
 name: chocolatine
-run-name: Running ${{ github.action }} workflow - ${{ github.actor }}
 
 on:
     push:
+      branches-ignore: [ main ]
     pull_request:
-      branches-ignore:
-        - 'ga-ignore-'
+      branches-ignore: [ ga-ignore- ]
     
 jobs:
     # Checks for coding-style errors.
     check_coding_style:
         runs-on: ghcr.io/epitech/coding-style-checker:latest
+
         steps:
-            - uses: actions/checkout@v3
-            - name: Checking coding-style
+            - uses: actions/checkout@v4
               run: |
                 coding-style . .
                 if [ -z coding-style-reports.log ]; then
                     exit 1
                 fi
               shell: bash
+
+    # Checks that project actually compiles
     check_program_compilation:
         runs-on: epitechcontent/epitest-docker
+
         steps:
-            - uses: actions/checkout@v3
-            - name: Checking compilation
+            - uses: actions/checkout@v4
               run: |
                 make && make re && make clean && make re
                 if [ $? -ne 0 ]; then
                   exit 1
                 fi
               shell: bash
-    #run_tests:
-    #    runs-on: epitechcontent/epitest-docker
+
+    # Launches unit tests
+    run_tests:
+        runs-on: epitechcontent/epitest-docker
+
+        steps:
+          - uses: actions/checkout@v4
+          - name: Checking tests
+            run: |
+              make tests_run
+
     # Redirects to Epitech's repository.
-    # TODO: It should use 'GIT_SSH_PRIVATE_KEY' secret to 'MIRROR_URL' env.
-    #push_to_mirror:
+    push_to_mirror:
+      needs: [ check_coding_style, check_program_compilation ]
+      runs-on: epitechcontent/epitest-docker
+
+      steps:
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        - uses: pixta-dev/repository-mirroring-action@v1
+          with:
+            ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+            target_repo_url: ${{ vars.MIRROR_URL }}
