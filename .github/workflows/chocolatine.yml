@@ -15,7 +15,8 @@ on:
 jobs:
     # Checks for coding-style errors.
     check_coding_style:
-        runs-on: ghcr.io/epitech/coding-style-checker:latest
+        runs-on: ubuntu:latest
+        container: ghcr.io/epitech/coding-style-checker:latest
 
         steps:
             - name: Runs coding-style report
