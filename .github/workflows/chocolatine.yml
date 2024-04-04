@@ -26,12 +26,11 @@ jobs:
                 repository: ''
             - name: Runs coding-style report
               run: |
-                check.sh . .
-                codingstyle=coding-style-reports.log
+                check.sh $(pwd) $(pwd)
                 while IFS= read -r -a line; do
                     fields=($(printf "%s" "$line"|cut -d':' --output-delimiter=' ' -f1-))
                     echo "::error title=${fields[2]} coding style error,file=${fields[0]},line=${fields[1]}::${fields[3]}"
-                done < $codingstyle
+                done < coding-style-reports.log
             - name: Checking coding-style errors
               run: |
                 if [ -z coding-style-reports.log ]; then
