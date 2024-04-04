@@ -33,7 +33,7 @@ jobs:
                 done < coding-style-reports.log
             - name: Checking coding-style errors
               run: |
-                if [ -z "$(cat coding-style-reports.log)" ]; then
+                if [ ! -z "$(cat coding-style-reports.log)" ]; then
                     exit 1
                 fi
 
