@@ -30,7 +30,7 @@ jobs:
                 while IFS= read -r -a line; do
                     fields=($(printf "%s" "$line"|cut -d':' --output-delimiter=' ' -f1-))
                     echo "::error title=${fields[2]} coding style error,file=${fields[0]},line=${fields[1]}::${fields[3]}"
-                done < coding-style-reports.log
+                done < $(pwd)/coding-style-reports.log
                 if [ -z coding-style-reports.log ]; then
                     exit 1
                 fi
