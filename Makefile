@@ -15,6 +15,8 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	gcc -o $(NAME) $(OBJ)
 
+tests_run:
+
 clean:
 	rm -rfv coding-style-reports.log vgcore* *~ "#*#"
 
